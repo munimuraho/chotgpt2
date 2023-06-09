@@ -9,7 +9,6 @@ openai.api_key = st.secrets.OpenAIAPI.openai_api_key
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         {"role": "system", "content": st.secrets.AppSettings.chatbot_setting}
-         
         ]
 
 # チャットボットとやりとりする関数
@@ -35,7 +34,7 @@ def communicate():
 st.title("I'm ChotGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
 
-user_input = st.text_input("できるだけ頑張ります。", key="user_input", on_change=communicate)
+user_input = st.text_input("できるだけ頑張ります。以下にテキストをどうそ。", key="user_input", on_change=communicate)
 
 if st.session_state["messages"]:
     messages = st.session_state["messages"]
