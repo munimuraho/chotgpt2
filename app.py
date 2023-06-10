@@ -19,7 +19,7 @@ def communicate():
     messages.append(user_message)
 
     response = openai.ChatCompletion.create(
-        model={{selected_item}},
+        model={selected_item},
         messages=messages,
         temperature= st.secrets.Appsettings.temp
     )  
