@@ -19,7 +19,7 @@ def communicate():
     messages.append(user_message)
 
     response = openai.ChatCompletion.create(
-        model="{{selected_item}}",
+        model={{selected_item}},
         messages=messages,
         temperature= st.secrets.Appsettings.temp
     )  
@@ -33,8 +33,8 @@ def communicate():
 # ユーザーインターフェイスの構築
 st.title("I'm ChotGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
-selected_item = st.selectbox('モデル',
-                                 ['gpt-3.5-turbo', 'gpt-4'])
+selected_item = st.selectbox("モデル",
+                                 ["gpt-3.5-turbo", "gpt-4"])
 
 user_input = st.text_input("できるだけ頑張ります。以下にテキストをどうそ。", key="user_input", on_change=communicate)
 
