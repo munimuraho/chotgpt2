@@ -22,7 +22,7 @@ def communicate():
         model="gpt-3.5-turbo",
         messages=messages,
         temperature= 1.2,
-        stream=true
+#    stream=true
     )  
 
     bot_message = response["choices"][0]["message"]
