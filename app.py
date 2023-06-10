@@ -21,7 +21,7 @@ def communicate():
     response = openai.ChatCompletion.create(
         model={selected_item},
         messages=messages,
-        temperature= 1.12
+        temperature= 1.2
     )  
 
     bot_message = response["choices"][0]["message"]
