@@ -1,74 +1,51 @@
-import os
 
 import streamlit as st
-from streamlit_chat import message
-
 import openai
+
+# Streamlit Community Cloudの「Secrets」からOpenAI API keyを取得
 openai.api_key = st.secrets.OpenAIAPI.openai_api_key
 
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-    MessagesPlaceholder,
-)
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
-from langchain.callbacks.base import CallbackManager
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+# st.session_stateを使いメッセージのやりとりを保存
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [
+        {"role": "system", "content": st.secrets.AppSettings.chatbot_setting}
+        ]
 
-# Does it work?
-from langchain.callbacks.streamlit import StreamlitCallbackHandler
+# チャットボットとやりとりする関数
+def communicate():
+    messages = st.session_state["messages"]
 
-system_message = """
-あなたは研究アシスタントです。ユーザは研究者で、あなたに研究に関する質問を投げかけます。
-アシスタントとして、論文執筆に役立つ回答を、できる限り根拠を示した上で返してください。"""
-prompt = ChatPromptTemplate.from_messages([
-  SystemMessagePromptTemplate.from_template(system_message),
-  MessagesPlaceholder(variable_name="history"),
-  HumanMessagePromptTemplate.from_template("{input}")
-])
+    user_message = {"role": "user", "content": st.session_state["user_input"]}
+    messages.append(user_message)
 
-@st.cache_resource
-def load_conversation():
-  llm = ChatOpenAI(
-    streaming=True,
-    callback_manager=CallbackManager([
-      StreamlitCallbackHandler(),
-      StreamingStdOutCallbackHandler()
-    ]),
-    verbose=True,
-    temperature=0,
-    max_tokens=1024
-  )
-  memory = ConversationBufferMemory(return_messages=True)
-  conversation = ConversationChain(
-    memory=memory,
-    prompt=prompt,
-    llm=llm
-  )
-  return conversation
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        temperature= 1.2,
+#    stream=true
+    )  
 
-st.title("研究アシスタント")
+    bot_message = response["choices"][0]["message"]
+    messages.append(bot_message)
 
-if "generated" not in st.session_state:
-    st.session_state.generated = []
-if "past" not in st.session_state:
-    st.session_state.past = []
+    st.session_state["user_input"] = ""  # 入力欄を消去
 
-with st.form("研究アシスタントに質問する"):
-  user_message = st.text_area("質問を入力してください")
 
-  submitted = st.form_submit_button("質問する")
-  if submitted:
-    conversation = load_conversation()
-    answer = conversation.predict(input=user_message)
+# ユーザーインターフェイスの構築
+st.title("I'm ChotGPT!!!")
+st.write("ChatGPT APIを使ったチャットボットです。")
 
-    st.session_state.past.append(user_message)
-    st.session_state.generated.append(answer)
+selected_item = st.selectbox("モデル",
+                              ["gpt-3.5-turbo", "gpt-4"], on_change=communicate)
 
-    if st.session_state["generated"]:
-      for i in range(len(st.session_state.generated) - 1, -1, -1):
-        message(st.session_state.generated[i], key=str(i))
-        message(st.session_state.past[i], is_user=True, key=str(i) + "_user")
+user_input = st.text_input("できるだけ頑張ります。以下にテキストをどうそ。", key="user_input", on_change=communicate)
+
+if st.session_state["messages"]:
+    messages = st.session_state["messages"]
+
+    for message in reversed(messages[1:]):  # 直近のメッセージを上に
+        speaker = "🙂"
+        if message["role"]=="assistant":
+            speaker="🤖"
+
+        st.write(speaker + ": " + message["content"])
