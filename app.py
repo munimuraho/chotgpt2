@@ -21,7 +21,7 @@ def communicate():
 
     response = openai.ChatCompletion.create(
         # model={selected_item},
-         model="gpt-3.5-turbo",
+         model="gpt-4",
         messages=messages,
         temperature= 1.2
     )  
