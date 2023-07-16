@@ -34,7 +34,7 @@ st.title("I'm ChotGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
 
 if st.button("Googleでログイン"):
-    user = st.oauth_login(st.secrets.AuthSettings.googleclient, "https://www.googleapis.com/auth/userinfo.profile")
+    user = st.oauth_login(st.secrets.AuthSettings.googleclientid, "https://www.googleapis.com/auth/userinfo.profile")
     if user:
         st.write("認証に成功しました！")
         st.write(f"ユーザー名: {user['name']}")
