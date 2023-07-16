@@ -16,7 +16,7 @@ if "messages" not in st.session_state:
 
 # 認証チェック関数
 def authenticate():
-    client_id = "YOUR_CLIENT_ID"  # Google OAuth2.0のクライアントIDを指定してください
+    client_id = "st.secrets.AuthSettings.googleclientid"  # Google OAuth2.0のクライアントIDを指定してください
     st.write("認証中...")
     credentials, _ = google.auth.default()
 
@@ -38,7 +38,7 @@ def authenticate():
             credentials.fetch_token(
                 "https://accounts.google.com/o/oauth2/token",
                 authorization_response=st.session_state["code"],
-                client_secret="st.secrets.AuthSettings.googleclient"  # Google OAuth2.0のクライアントシークレットを指定してください
+                client_secret="st.secrets.AuthSettings.googleclientsecret"  # Google OAuth2.0のクライアントシークレットを指定してください
             )
 
             st.session_state.pop("code")  # クリア
