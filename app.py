@@ -1,3 +1,4 @@
+
 import streamlit as st
 import openai
 
@@ -8,7 +9,7 @@ openai.api_key = st.secrets.OpenAIAPI.openai_api_key
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         {"role": "system", "content": st.secrets.AppSettings.chatbot_setting}
-    ]
+        ]
 
 # チャットボットとやりとりする関数
 def communicate():
@@ -18,10 +19,10 @@ def communicate():
     messages.append(user_message)
 
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="{{selected_item}}",
         messages=messages,
-        temperature=1.2
-    )
+        temperature= st.secrets.Appsettings.temp
+    )  
 
     bot_message = response["choices"][0]["message"]
     messages.append(bot_message)
@@ -32,15 +33,8 @@ def communicate():
 # ユーザーインターフェイスの構築
 st.title("I'm ChotGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
-
-if st.button("Googleでログイン"):
-    user = st.oauth_login(st.secrets.AuthSettings.googleclientid, "https://www.googleapis.com/auth/userinfo.profile")
-    if user:
-        st.write("認証に成功しました！")
-        st.write(f"ユーザー名: {user['name']}")
-        st.write(f"メールアドレス: {user['email']}")
-    else:
-        st.write("認証に失敗しました。再試行してください。")
+selected_item = st.selectbox('モデル',
+                                 ['gpt-3.5-turbo', 'gpt-4'])
 
 user_input = st.text_input("できるだけ頑張ります。以下にテキストをどうそ。", key="user_input", on_change=communicate)
 
@@ -49,7 +43,7 @@ if st.session_state["messages"]:
 
     for message in reversed(messages[1:]):  # 直近のメッセージを上に
         speaker = "🙂"
-        if message["role"] == "assistant":
-            speaker = "🤖"
+        if message["role"]=="assistant":
+            speaker="🤖"
 
         st.write(speaker + ": " + message["content"])
