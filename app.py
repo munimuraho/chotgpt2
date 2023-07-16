@@ -1,4 +1,3 @@
-
 import streamlit as st
 import openai
 
@@ -7,9 +6,18 @@ openai.api_key = st.secrets.OpenAIAPI.openai_api_key
 
 # st.session_stateを使いメッセージのやりとりを保存
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [
-        {"role": "system", "content": st.secrets.AppSettings.chatbot_setting}
-        ]
+    st.session_state["messages"] = []
+
+# プロンプトのセレクトボックスを作成
+prompt = st.selectbox(
+    "プロンプトを選んでください：",
+    options=["テキスト要約", "文章ギャル化"]
+)
+
+if prompt == "テキスト要約":
+    st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting1})
+elif prompt == "文章ギャル化":
+    st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting2})
 
 # チャットボットとやりとりする関数
 def communicate():
@@ -21,7 +29,7 @@ def communicate():
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
-        temperature= 1.1
+        temperature=1.1
     )  
 
     bot_message = response["choices"][0]["message"]
@@ -31,7 +39,7 @@ def communicate():
 
 
 # ユーザーインターフェイスの構築
-st.title("I'm ChotGPT!!!")
+st.title("I'm ChatGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
 
 
