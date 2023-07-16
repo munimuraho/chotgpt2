@@ -39,7 +39,7 @@ def communicate():
 
 
 # ユーザーインターフェイスの構築
-st.title("I'm ChatGPT!!!")
+st.title("I'm ChotGPT!!!")
 st.write("ChatGPT APIを使ったチャットボットです。")
 
 
