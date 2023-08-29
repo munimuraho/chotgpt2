@@ -11,12 +11,12 @@ if "messages" not in st.session_state:
 # プロンプトのセレクトボックスを作成
 prompt = st.selectbox(
     "プロンプトを選んでください：",
-    options=["プロンプト1", "プロンプト2"]
+    options=["真面目に500文字に要約", "ギャル口調に変換"]
 )
 
-if prompt == "プロンプト1":
+if prompt == "真面目に500文字に要約":
     st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting1})
-elif prompt == "プロンプト2":
+elif prompt == "ギャル口調に変換":
     st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting2})
 
 # チャットボットとやりとりする関数
