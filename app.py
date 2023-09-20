@@ -18,6 +18,8 @@ if prompt == "真面目に500文字に要約":
     st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting1})
 elif prompt == "ギャル口調に変換":
     st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting2})
+elif prompt == "フリー":
+    st.session_state["messages"].append({"role": "system", "content": st.secrets.AppSettings.chatbot_setting3})
 
 # チャットボットとやりとりする関数
 def communicate():
