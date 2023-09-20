@@ -11,7 +11,7 @@ if "messages" not in st.session_state:
 # プロンプトのセレクトボックスを作成
 prompt = st.selectbox(
     "プロンプトを選んでください：",
-    options=["真面目に500文字に要約", "ギャル口調に変換"]
+    options=["真面目に500文字に要約", "ギャル口調に変換","フリー"]
 )
 
 if prompt == "真面目に500文字に要約":
